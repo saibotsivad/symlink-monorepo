@@ -1,0 +1,2 @@
+# You'll want to gitignore these, which are the symlinked versions.
+/apps/*/node_modules
