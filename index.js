@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { promisify } from 'node:util'
 import { join, sep } from 'node:path'
 import { stat } from 'node:fs/promises'
