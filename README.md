@@ -2,6 +2,28 @@
 
 Single command to setup a monorepo using symlinks.
 
+## install
+
+The usual way:
+
+```shell
+npm install symlink-monorepo
+```
+
+## use
+
+It's a CLI tool (see below for details) so use it like:
+
+```shell
+symlink-monorepo --root=example-monorepo --folderPrefix="_" --npmPrefix="@"
+```
+
+* `root: String` *[optional]* - the monorepo root, typically leave this blank.
+* `folderPrefix: String` *[default: "_"]* - the folder name prefix to use for symlinking
+* `npmPrefix: String` *[default: "$"]* - the module scope, e.g. `_shared` maps to `import('$/shared')`
+
+With that primer, let me tell you why this exists.
+
 ## the problem
 
 Many monorepo projects are set up like this:
@@ -119,16 +141,31 @@ The `apps_folder/*/node_modules` folders in this case would be generated using:
 symlink-monorepo --folderPrefix="_" --npmPrefix="@"
 ```
 
-Lets break down what this is all about:
+Now let's break down what this is all about:
 
-### root prefixed folders
+### folder prefix
 
-TODO
+Folders that are at the repo root level, and at each app level, that are prefixed
+with the `folderPrefix` property, are symlinked.
 
-### app prefixed folders
+Most of the projects that I work with use the underscore (aka `_`) character, like the
+earlier example, eg. `/_shared1` and `/apps_folder/app1/_lib1`.
 
-TODO
+Although it's common to have a single folder like `_shared` it is also common to have
+multiple folders, e.g. one for services, one for controllers, etc.
 
 ### npm prefix
 
-TODO
+Each of these folders is symlinked to a single "scope" name, e.g. the [@angular/cli](https://www.npmjs.com/package/@angular/cli)
+scope name is `@angular`, so if you set `--npmPrefix="@"` the import name would be e.g.
+`@/shared` or `@/lib` etc.
+
+Specifically, the `folderPrefix` gets stripped from the folder name as part of the symlink.
+
+So if you set the `folderPrefix` to `_` and the `npmPrefix` to `$` than if you had a
+file at `_controller/util.js` you would import it with `@/controller/util.js`. Or if you
+had a file at `apps/app1/_lib/util.js` you would import with `@/lib/util.js`.
+
+**Note:** because of this naming convention, you cannot have an app symlinked folder,
+e.g. `apps/app1/_shared` that has the same name (in this case `_shared`) as a root folder.
+To do so would not be possible, so it'll throw an error.

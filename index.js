@@ -9,7 +9,7 @@ import symlink from 'fs-symlink'
 const glob = promisify(oldGlob)
 
 let { root: monorepoRootDirectory, folderPrefix, npmPrefix } = mri(process.argv.slice(2))
-if (!monorepoRootDirectory) throw new Error('You need to specify "root".')
+monorepoRootDirectory = monorepoRootDirectory || ''
 folderPrefix = folderPrefix || '_'
 npmPrefix = npmPrefix || '$'
 
